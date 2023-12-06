@@ -307,18 +307,3 @@ res6
 rownames(res6) <- res6$sample
 apply(res6[,-1], 1, function(x) fisher.test(matrix(as.numeric(x[1:4]), ncol=2, byrow=T)))
 
-## linux
-module load bedtools
-module load homer
-
-bedtools intersect -a ARTDeco_stress_output/dogs/mmu_NIH3TR_heatshock_SRR5558715_Aligned.sortedByCoord.out.dogs.bed -b ARTDeco_stress_output/dogs/mmu_NIH3TR_heatshock_SRR5558716_Aligned.sortedByCoord.out.dogs.bed|sort -u >heatshock.bed
-bedtools intersect -a ARTDeco_stress_output/dogs/mmu_NIH3TR_osmstress_SRR5558719_Aligned.sortedByCoord.out.dogs.bed -b ARTDeco_stress_output/dogs/mmu_NIH3TR_osmstress_SRR5558720_Aligned.sortedByCoord.out.dogs.bed|sort -u >osmstress.bed
-bedtools intersect -a ARTDeco_stress_output/dogs/mmu_NIH3TR_oxistress_SRR5558717_Aligned.sortedByCoord.out.dogs.bed -b ARTDeco_stress_output/dogs/mmu_NIH3TR_oxistress_SRR5558718_Aligned.sortedByCoord.out.dogs.bed|sort -u >oxistress.bed
-bedtools intersect -a ARTDeco_stress_output/dogs/mmu_NIH3TR_untreated_SRR5558713_Aligned.sortedByCoord.out.dogs.bed -b ARTDeco_stress_output/dogs/mmu_NIH3TR_untreated_SRR5558714_Aligned.sortedByCoord.out.dogs.bed|sort -u >untreated.bed
-
-for i in heatshock.bed osmstress.bed oxistress.bed
-do
-	file=`basename $i .bed`
-	mergePeaks ${i} E16.5.bed -prefix E16.5_vs_${file} -matrix $file.matrix -venn ${file}_venn
-	Rscript multi_peaks_Venn.R ${file} ${file}_venn
-done
